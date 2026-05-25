@@ -1,0 +1,87 @@
+{
+  "installed_apps": [
+    "phone",
+    "messages",
+    "safari",
+    "calculator",
+    "music",
+    "weather",
+    "notes",
+    "telegram"
+  ],
+  "apps_data": {
+    "phone": {
+      "id": "phone",
+      "name": "Телефон",
+      "icon": "📞",
+      "color": "#34C759",
+      "system": true,
+      "category": "Системные",
+      "size": "3.1 MB"
+    },
+    "messages": {
+      "id": "messages",
+      "name": "Сообщения",
+      "icon": "💬",
+      "color": "#0A84FF",
+      "system": true,
+      "category": "Системные",
+      "size": "5.3 MB"
+    },
+    "safari": {
+      "id": "safari",
+      "name": "Safari",
+      "icon": "🌐",
+      "color": "#007AFF",
+      "system": true,
+      "category": "Системные",
+      "size": "15.8 MB"
+    },
+    "calculator": {
+      "id": "calculator",
+      "name": "Калькулятор",
+      "icon": "🧮",
+      "color": "#FF9F0A",
+      "system": true,
+      "category": "Системные",
+      "size": "2.3 MB"
+    },
+    "music": {
+      "id": "music",
+      "name": "Музыка",
+      "icon": "🎵",
+      "color": "#FF2D55",
+      "system": true,
+      "category": "Системные",
+      "size": "45.2 MB"
+    },
+    "weather": {
+      "id": "weather",
+      "name": "Погода",
+      "icon": "🌤️",
+      "color": "#4facfe",
+      "system": true,
+      "category": "Системные",
+      "size": "8.1 MB"
+    },
+    "notes": {
+      "id": "notes",
+      "name": "Заметки",
+      "icon": "📝",
+      "color": "#FFD60A",
+      "system": true,
+      "category": "Системные",
+      "size": "1.7 MB"
+    },
+    "telegram": {
+      "id": "telegram",
+      "name": "Telegram",
+      "icon": "✈️",
+      "color": "#0088cc",
+      "category": "Общение",
+      "size": "67.3 MB",
+      "installed": true,
+      "system": false
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Отчёт на сегодня{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <a href="/" class="btn btn-outline-secondary btn-back">
+        <i class="bi bi-arrow-left"></i> Назад
+    </a>
+    <h2>📋 Отчёт на сегодня</h2>
+    <div class="ms-auto">
+        <a href="/export/report/excel" class="btn btn-success">
+            <i class="bi bi-file-earmark-excel"></i> Скачать Excel
+        </a>
+        <button class="btn btn-primary" onclick="window.print()">
+            <i class="bi bi-printer"></i> Печать
+        </button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        📅 {{ today.strftime('%d.%m.%Y') }} — Студенты, требующие внимания
+    </div>
+    <div class="card-body">
+        {% if alerts %}
+            <div class="list-group">
+                {% for alert in alerts %}
+                <div class="list-group-item list-group-item-{{ 'danger' if 'ПРОСРОЧЕНО' in alert.status_text else 'warning' }}">
+                    <div class="d-flex w-100 justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">{{ alert.student.full_name }}</h6>
+                            <small>{{ alert.student.group_name or 'Нет группы' }}</small>
+                            {% if alert.student.phone %}
+                                <br><small>📞 {{ alert.student.phone }}</small>
+                            {% endif %}
+                        </div>
+                        <div class="text-end">
+                            <span class="badge bg-{{ 'danger' if 'ПРОСРОЧЕНО' in alert.status_text else 'warning' }} fs-6">
+                                {{ alert.status_text }}
+                            </span>
+                            <br><small class="text-muted">{{ alert.due_date.strftime('%d.%m.%Y') }}</small>
+                        </div>
+                    </div>
+                    <p class="mb-1 mt-2">
+                        <strong>💉 {{ alert.vaccine.name }}</strong>
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <div style="font-size: 64px;">✅</div>
+                <h4 class="text-success mt-3">Все прививки в порядке!</h4>
+                <p class="text-muted">На сегодня и ближайшие {{ settings.reminder_days }} дней вызовов нет.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

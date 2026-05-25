@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Медпункт{% endblock %} | {{ settings.college_name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="icon" href="data:,">
+    <style>
+        :root {
+            --sidebar-width: 270px;
+            --sidebar-bg: #00b4d8;
+            --sidebar-hover: #0096c7;
+            --sidebar-active: #0077b6;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Основной контейнер */
+        .app-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Боковая панель */
+        .sidebar {
+            width: var(--sidebar-width);
+            min-height: 100vh;
+            background: linear-gradient(180deg, #00b4d8 0%, #0096c7 50%, #0077b6 100%);
+            color: white;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            bottom: 15px;
+            z-index: 1000;
+            overflow-y: auto;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0, 180, 216, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Шапка боковой панели */
+        .sidebar-header {
+            padding: 30px 20px 20px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo {
+            width: 55px;
+            height: 55px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 12px;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar-header h4 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.4;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-header small {
+            opacity: 0.8;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 500;
+        }
+
+        /* Профиль пользователя */
+        .sidebar-user {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-user .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            border: 2px solid rgba(255,255,255,0.4);
+            flex-shrink: 0;
+            backdrop-filter: blur(5px);
+        }
+
+        .sidebar-user .user-info {
+            font-size: 12px;
+            line-height: 1.3;
+            min-width: 0;
+        }
+
+        .sidebar-user .user-info strong {
+            display: block;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-user .user-info small {
+            opacity: 0.8;
+            font-size: 10px;
+        }
+
+        /* Навигация */
+        .sidebar-nav {
+            padding: 10px 0;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav .nav-section {
+            padding: 15px 20px 8px 20px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.6;
+            font-weight: 600;
+        }
+
+        .sidebar-nav a {
+            color: rgba(255,255,255,0.9);
+            padding: 11px 20px;
+            margin: 2px 12px;
+            font-size: 13px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 12px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transform: translateX(3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-nav a.active {
+            background: rgba(255,255,255,0.28);
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .sidebar-nav a i {
+            font-size: 17px;
+            width: 22px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* Нижняя часть */
+        .sidebar-footer {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 10px;
+            text-align: center;
+            opacity: 0.7;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+
+        /* Основной контент */
+        .main-content {
+            margin-left: calc(var(--sidebar-width) + 30px);
+            padding: 30px;
+            min-height: 100vh;
+            flex: 1;
+        }
+
+        /* Заголовок страницы */
+        .page-header {
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .page-header h2 {
+            font-weight: 700;
+            color: #0077b6;
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        /* Карточки */
+        .card {
+            border: none;
+            border-radius: 18px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background: white;
+            border-bottom: 1px solid #eef2f7;
+            font-weight: 600;
+            border-radius: 18px 18px 0 0 !important;
+            padding: 16px 20px;
+            color: #0077b6;
+        }
+
+        /* Кнопка назад */
+        .btn-back {
+            font-size: 13px;
+            border-radius: 10px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            transform: translateX(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Всплывающие сообщения */
+        .flash-messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+        }
+
+        /* Таблицы */
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6c757d;
+        }
+
+        .table td {
+            vertical-align: middle;
+            font-size: 13px;
+        }
+
+        .table-success { background-color: #d4edda !important; }
+        .table-warning { background-color: #fff3cd !important; }
+        .table-danger { background-color: #f8d7da !important; }
+
+        /* Кнопки */
+        .btn {
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00b4d8, #0077b6);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0096c7, #0066a1);
+            box-shadow: 0 4px 15px rgba(0,180,216,0.4);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                min-height: auto;
+                border-radius: 0;
+                margin: 0;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .sidebar-nav {
+                display: flex;
+                flex-wrap: wrap;
+                padding: 5px;
+            }
+            .sidebar-nav a {
+                flex: 1 1 auto;
+                min-width: 80px;
+                justify-content: center;
+                font-size: 11px;
+                padding: 8px 10px;
+                margin: 3px;
+                border-radius: 8px;
+            }
+            .sidebar-nav .nav-section {
+                display: none;
+            }
+            .sidebar-header, .sidebar-user, .sidebar-footer {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Боковая панель -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">🏥</div>
+                <h4>{{ settings.college_name }}</h4>
+                <small>Медицинский пункт</small>
+            </div>
+
+            <div class="sidebar-user">
+                <div class="user-avatar">{{ current_user.avatar if current_user else '👤' }}</div>
+                <div class="user-info">
+                    <strong>{{ current_user.full_name if current_user else session.get('user_name', 'Гость') }}</strong>
+                    <small>
+                        {% if session.get('role') == 'admin' %}
+                            👑 Администратор
+                        {% elif session.get('role') == 'nurse' %}
+                            👩‍⚕️ Медсестра
+                        {% else %}
+                            Гость
+                        {% endif %}
+                    </small>
+                </div>
+            </div>
+
+            <div class="sidebar-nav">
+                <div class="nav-section"> Главное меню</div>
+                <a href="/" class="{% if request.path == '/' %}active{% endif %}">
+                    <i class="bi bi-speedometer2"></i> Главная
+                </a>
+                <a href="/students" class="{% if '/student' in request.path %}active{% endif %}">
+                    <i class="bi bi-people-fill"></i> Студенты
+                </a>
+                <a href="/report" class="{% if request.path == '/report' %}active{% endif %}">
+                    <i class="bi bi-clipboard2-pulse"></i> Отчёт на сегодня
+                </a>
+
+                <div class="nav-section">📚 Справочники</div>
+                <a href="/vaccines" class="{% if '/vaccine' in request.path %}active{% endif %}">
+                    <i class="bi bi-capsule"></i> Вакцины
+                </a>
+
+                <div class="nav-section">📤 Экспорт данных</div>
+                <a href="/export/excel">
+                    <i class="bi bi-file-earmark-excel"></i> База в Excel
+                </a>
+                <a href="/export/report/excel">
+                    <i class="bi bi-file-earmark-pdf"></i> Отчёт в Excel
+                </a>
+
+                <div class="nav-section">⚙️ Система</div>
+                <a href="/profile" class="{% if request.path == '/profile' %}active{% endif %}">
+                    <i class="bi bi-person-circle"></i> Мой профиль
+                </a>
+                {% if session.get('role') == 'admin' %}
+                <a href="/users" class="{% if request.path == '/users' %}active{% endif %}">
+                    <i class="bi bi-people-fill"></i> Пользователи
+                </a>
+                <a href="/settings" class="{% if request.path == '/settings' %}active{% endif %}">
+                    <i class="bi bi-gear-fill"></i> Настройки
+                </a>
+                {% endif %}
+                <a href="/logout" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.25); padding-top: 15px;">
+                    <i class="bi bi-box-arrow-right"></i> Выйти из системы
+                </a>
+            </div>
+
+            <div class="sidebar-footer">
+                © 2026 Медпункт v2.0<br>
+                <small>Все права защищены</small>
+            </div>
+        </div>
+
+        <!-- Основной контент -->
+        <div class="main-content">
+            <!-- Всплывающие сообщения -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'success' if category == 'success' else 'danger' if category == 'danger' else 'warning' if category == 'warning' else 'info' }} alert-dismissible fade show shadow-lg" role="alert" style="border-radius: 12px; border: none;">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Автоматическое скрытие flash-сообщений через 3 секунды
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                alert.style.transition = 'opacity 0.5s';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            });
+        }, 3000);
+
+        // Анимация появления карточек
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.card').forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

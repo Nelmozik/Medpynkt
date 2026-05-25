@@ -1,0 +1,255 @@
+</script>
+</body>
+</html>{% extends "base.html" %}
+{% block title %}Медпункт{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2> Главная </h2>
+</div>
+
+<!-- Объёмные карточки статистики -->
+<div class="row g-4 mb-4">
+    <!-- Всего студентов - ОРАНЖЕВЫЙ -->
+    <div class="col-md-3">
+        <div class="stat-card stat-card-orange">
+            <div class="stat-card-inner">
+                <div class="stat-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ total_students }}</h3>
+                    <p>Всего студентов</p>
+                </div>
+            </div>
+            <div class="stat-card-footer">
+                <i class="bi bi-database"></i> Общая база
+            </div>
+        </div>
+    </div>
+
+    <!-- Требуют внимания - СВЕТЛО-ЖЁЛТЫЙ -->
+    <div class="col-md-3">
+        <div class="stat-card stat-card-yellow">
+            <div class="stat-card-inner">
+                <div class="stat-icon">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ alerts_count }}</h3>
+                    <p>Требуют внимания</p>
+                </div>
+            </div>
+            <div class="stat-card-footer">
+                <i class="bi bi-clock"></i> В ближайшие {{ settings.reminder_days }} дн.
+            </div>
+        </div>
+    </div>
+
+    <!-- Просрочено - КРАСНЫЙ -->
+    <div class="col-md-3">
+        <div class="stat-card stat-card-red">
+            <div class="stat-card-inner">
+                <div class="stat-icon">
+                    <i class="bi bi-calendar-x-fill"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ overdue_count }}</h3>
+                    <p>Просрочено</p>
+                </div>
+            </div>
+            <div class="stat-card-footer">
+                <i class="bi bi-arrow-right-circle"></i> Нужно идти на приём
+            </div>
+        </div>
+    </div>
+
+    <!-- Привиты по плану - ЗЕЛЁНЫЙ -->
+    <div class="col-md-3">
+        <div class="stat-card stat-card-green">
+            <div class="stat-card-inner">
+                <div class="stat-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ vaccinated_count }}</h3>
+                    <p>Привиты по плану</p>
+                </div>
+            </div>
+            <div class="stat-card-footer">
+                <i class="bi bi-check-circle"></i> Вакцинация актуальна
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Быстрые действия -->
+<div class="card mt-4">
+    <div class="card-header">⚡ Быстрые действия</div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <a href="/student/add" class="btn btn-primary w-100 py-2">
+                    <i class="bi bi-person-plus"></i> Добавить студента
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="/report" class="btn btn-warning w-100 py-2">
+                    <i class="bi bi-clipboard2-pulse"></i> Отчёт на сегодня
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="/export/excel" class="btn btn-success w-100 py-2">
+                    <i class="bi bi-file-earmark-excel"></i> Экспорт в Excel
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="/settings" class="btn btn-secondary w-100 py-2">
+                    <i class="bi bi-gear-fill"></i> Настройки
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .stat-card {
+        border-radius: 20px;
+        padding: 0;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
+        cursor: default;
+        min-height: 160px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -30%;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+        animation: pulse 3s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    /* Оранжевая карточка */
+    .stat-card-orange {
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff8c42 100%);
+    }
+
+    /* Светло-жёлтая карточка */
+    .stat-card-yellow {
+        background: linear-gradient(135deg, #ffe082 0%, #ffcc02 50%, #ffb300 100%);
+    }
+
+    .stat-card-yellow .stat-info h3,
+    .stat-card-yellow .stat-info p,
+    .stat-card-yellow .stat-card-footer {
+        color: #5d4037;
+    }
+
+    .stat-card-yellow .stat-icon {
+        color: white;
+    }
+
+    /* Красная карточка */
+    .stat-card-red {
+        background: linear-gradient(135deg, #dc3545 0%, #e74c3c 50%, #c0392b 100%);
+    }
+
+    /* Зелёная карточка */
+    .stat-card-green {
+        background: linear-gradient(135deg, #28a745 0%, #34ce57 50%, #20c997 100%);
+    }
+
+    .stat-card-inner {
+        padding: 25px 25px 15px 25px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        z-index: 1;
+    }
+
+    .stat-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        flex-shrink: 0;
+        border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    .stat-info h3 {
+        margin: 0;
+        font-size: 36px;
+        font-weight: 700;
+        line-height: 1;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .stat-info p {
+        margin: 5px 0 0 0;
+        font-size: 13px;
+        opacity: 0.9;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-card-footer {
+        padding: 10px 25px;
+        background: rgba(0,0,0,0.15);
+        font-size: 11px;
+        text-align: center;
+        z-index: 1;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+    .stat-card-footer i {
+        margin-right: 5px;
+    }
+
+    @media (max-width: 768px) {
+        .stat-card {
+            min-height: 120px;
+        }
+        .stat-card-inner {
+            padding: 15px;
+            gap: 15px;
+        }
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            border-radius: 12px;
+        }
+        .stat-info h3 {
+            font-size: 28px;
+        }
+    }
+</style>
+{% endblock %}

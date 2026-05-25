@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <a href="/settings" class="btn btn-outline-secondary btn-back">
+        <i class="bi bi-arrow-left"></i> Назад
+    </a>
+    <h2>📊 Статистика и аналитика</h2>
+</div>
+
+<!-- Общие показатели -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body p-4">
+                <div style="font-size: 48px;">👥</div>
+                <h2 class="mt-2" style="color: #ff6b35;">{{ total_students }}</h2>
+                <p class="text-muted mb-0">Всего студентов</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body p-4">
+                <div style="font-size: 48px;">💉</div>
+                <h2 class="mt-2" style="color: #00b4d8;">{{ total_vaccines }}</h2>
+                <p class="text-muted mb-0">Видов вакцин</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body p-4">
+                <div style="font-size: 48px;">📋</div>
+                <h2 class="mt-2" style="color: #28a745;">{{ total_vaccinations }}</h2>
+                <p class="text-muted mb-0">Всего прививок</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Статистика по группам -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">📚 Студенты по группам</div>
+            <div class="card-body p-0">
+                {% if group_stats %}
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Группа</th>
+                            <th>Количество</th>
+                            <th>Процент</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for group, count in group_stats %}
+                        <tr>
+                            <td><strong>{{ group }}</strong></td>
+                            <td>{{ count }}</td>
+                            <td>
+                                <div class="progress" style="height: 20px;">
+                                    {% set percent = (count / total_students * 100)|round|int if total_students > 0 else 0 %}
+                                    <div class="progress-bar bg-primary" style="width: {{ percent }}%">
+                                        {{ percent }}%
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-info-circle" style="font-size: 32px;"></i>
+                    <p class="mt-2">Нет данных по группам</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Статистика по вакцинам -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">💉 Охват вакцинацией</div>
+            <div class="card-body p-0">
+                {% if vaccine_stats %}
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Вакцина</th>
+                            <th>Привито</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vs in vaccine_stats %}
+                        <tr>
+                            <td>
+                                <strong>{{ vs.name }}</strong>
+                                {% if vs.mandatory %}
+                                    <span class="badge bg-danger">обяз.</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ vs.count }} чел.</td>
+                            <td>
+                                {% set percent = (vs.count / total_students * 100)|round|int if total_students > 0 else 0 %}
+                                {% if percent >= 80 %}
+                                    <span class="badge bg-success">✅ {{ percent }}%</span>
+                                {% elif percent >= 50 %}
+                                    <span class="badge bg-warning">⚠️ {{ percent }}%</span>
+                                {% else %}
+                                    <span class="badge bg-danger">❌ {{ percent }}%</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-info-circle" style="font-size: 32px;"></i>
+                    <p class="mt-2">Нет данных о прививках</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Последние прививки -->
+<div class="card mt-4">
+    <div class="card-header">🕐 Последние зарегистрированные прививки</div>
+    <div class="card-body p-0">
+        {% if recent_vaccinations %}
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Студент</th>
+                    <th>Группа</th>
+                    <th>Вакцина</th>
+                    <th>Дата</th>
+                    <th>Примечания</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vax in recent_vaccinations %}
+                <tr>
+                    <td><strong>{{ vax.student.full_name }}</strong></td>
+                    <td>{{ vax.student.group_name or '—' }}</td>
+                    <td>{{ vax.vaccine.name }}</td>
+                    <td>{{ vax.date_given.strftime('%d.%m.%Y') }}</td>
+                    <td>{{ vax.notes or '—' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-center py-4 text-muted">
+            <i class="bi bi-calendar-x" style="font-size: 32px;"></i>
+            <p class="mt-2">Прививки ещё не регистрировались</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

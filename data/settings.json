@@ -1,0 +1,10 @@
+{
+  "wifi": true,
+  "bluetooth": true,
+  "cellular": true,
+  "airplane_mode": false,
+  "dark_mode": true,
+  "notifications": true,
+  "brightness": 75,
+  "volume": 60
+}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Настройки{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <a href="/" class="btn btn-outline-secondary btn-back">
+        <i class="bi bi-arrow-left"></i> Назад
+    </a>
+    <h2>⚙️ Настройки системы</h2>
+</div>
+
+<div class="row">
+    <!-- Основные настройки -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">🏫 Общие настройки</div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Название колледжа</label>
+                        <input type="text" name="college_name" class="form-control" value="{{ settings.college_name }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">⏰ Напоминать за (дней)</label>
+                        <input type="number" name="reminder_days" class="form-control" value="{{ settings.reminder_days }}" min="1" max="365">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">🎨 Тема оформления</label>
+                        <select name="theme" class="form-select" onchange="window.location.href='/set-theme/' + this.value">
+                            <option value="medical" {% if theme == 'medical' %}selected{% endif %}>🩺 Медицинская (голубая)</option>
+                            <option value="dark" {% if theme == 'dark' %}selected{% endif %}>🌙 Тёмная</option>
+                            <option value="light" {% if theme == 'light' %}selected{% endif %}>☀️ Светлая</option>
+                        </select>
+                        <small class="text-muted">Тема применяется мгновенно при выборе</small>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="notifications_enabled" class="form-check-input" id="notifications" {% if settings.notifications_enabled %}checked{% endif %}>
+                            <label class="form-check-label" for="notifications">🔔 Включить уведомления</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i> Сохранить настройки
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Резервное копирование -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">💾 Резервное копирование</div>
+            <div class="card-body">
+                <p class="text-muted">Создайте резервную копию базы данных для защиты от потери данных.</p>
+                <a href="/backup" class="btn btn-warning">
+                    <i class="bi bi-download"></i> Создать резервную копию
+                </a>
+                <hr>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        <input type="checkbox" name="auto_backup" class="form-check-input" id="auto_backup" {% if settings.auto_backup %}checked{% endif %}>
+                        <label class="form-check-label" for="auto_backup">🤖 Автоматическое резервное копирование</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">📊 Статистика системы</div>
+            <div class="card-body text-center">
+                <div class="row">
+                    <div class="col-6">
+                        <h3>{{ total_students }}</h3>
+                        <small class="text-muted">Студентов</small>
+                    </div>
+                    <div class="col-6">
+                        <h3>{{ total_vaccines }}</h3>
+                        <small class="text-muted">Вакцин</small>
+                    </div>
+                </div>
+                <a href="/statistics" class="btn btn-info mt-3">
+                    <i class="bi bi-graph-up"></i> Подробная статистика
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

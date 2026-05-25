@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход | Медпункт</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        .login-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .login-card .logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #00b4d8, #0077b6);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 20px;
+            color: white;
+        }
+        .login-card h3 {
+            text-align: center;
+            color: #0077b6;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .login-card .subtitle {
+            text-align: center;
+            color: #6c757d;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+        .form-control {
+            border-radius: 12px;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+        .form-control:focus {
+            border-color: #00b4d8;
+            box-shadow: 0 0 0 0.2rem rgba(0,180,216,0.15);
+        }
+        .btn-login {
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #00b4d8, #0077b6);
+            border: none;
+            transition: all 0.3s;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,180,216,0.4);
+        }
+        .test-accounts {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            font-size: 11px;
+            color: #6c757d;
+        }
+        .test-accounts strong {
+            color: #0077b6;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="logo">🏥</div>
+        <h3>Медпункт колледжа</h3>
+        <p class="subtitle">Войдите в свою учётную запись</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" style="border-radius: 12px;">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label"><i class="bi bi-person"></i> Логин</label>
+                <input type="text" name="username" class="form-control" placeholder="Введите логин" required autofocus>
+            </div>
+            <div class="mb-3">
+                <label class="form-label"><i class="bi bi-lock"></i> Пароль</label>
+                <input type="password" name="password" class="form-control" placeholder="Введите пароль" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-login w-100">
+                <i class="bi bi-box-arrow-in-right"></i> Войти
+            </button>
+        </form>
+
+        <div class="test-accounts">
+            <strong>🔑 Тестовые аккаунты:</strong><br>
+            👑 Администратор: <strong>admin</strong> / <strong>admin123</strong><br>
+            👩‍⚕️ Медсестра: <strong>nurse</strong> / <strong>nurse123</strong>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

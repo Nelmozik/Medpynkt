@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Мой профиль{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <a href="/" class="btn btn-outline-secondary btn-back">
+        <i class="bi bi-arrow-left"></i> Назад
+    </a>
+    <h2>👤 Мой профиль</h2>
+    <span class="badge bg-{{ 'danger' if session.get('role') == 'admin' else 'info' }} ms-auto fs-6">
+        {{ '👑 Администратор' if session.get('role') == 'admin' else '👩‍⚕️ Медсестра' }}
+    </span>
+</div>
+
+<div class="card">
+    <div class="card-header">📝 Личные данные</div>
+    <div class="card-body">
+        <div class="text-center mb-4">
+            <div style="width: 80px; height: 80px; border-radius: 20px; background: linear-gradient(135deg, #00b4d8, #0077b6); display: inline-flex; align-items: center; justify-content: center; font-size: 40px; color: white;">
+                {{ current_user.avatar }}
+            </div>
+        </div>
+        <form method="POST">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">ФИО</label>
+                    <input type="text" name="full_name" class="form-control" value="{{ current_user.full_name }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Должность</label>
+                    <input type="text" class="form-control" value="{{ current_user.position }}" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">📞 Телефон</label>
+                    <input type="text" name="phone" class="form-control" value="{{ current_user.phone or '' }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">📧 Email</label>
+                    <input type="email" name="email" class="form-control" value="{{ current_user.email or '' }}">
+                </div>
+            </div>
+            {% if session.get('role') == 'admin' %}
+            <div class="mb-3">
+                <label class="form-label">🔒 Новый пароль (оставьте пустым, если не меняете)</label>
+                <input type="password" name="new_password" class="form-control">
+            </div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-lg"></i> Сохранить
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

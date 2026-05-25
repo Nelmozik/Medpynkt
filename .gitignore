@@ -1,0 +1,16 @@
+# Виртуальное окружение
+venv/
+.venv/
+ENV/
+
+# Папка настроек PyCharm
+.idea/
+
+# База данных SQLite (чтобы не залить тестовых студентов на GitHub)
+instance/
+*.db
+*.sqlite3
+
+# Временные файлы Python
+__pycache__/
+*.pyc
